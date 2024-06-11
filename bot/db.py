@@ -85,6 +85,22 @@ class Database:
         except Exception as e:
             print(f"Error updating casting call notification list: {e}")
             return False
+        
+    def get_casting_call_notification_list(self, database, table):
+        db = self.client[database]
+        collection = db[table]
+        notification_list = collection.find_one({"notification_list": {"$exists": True}})
+        return notification_list
+    
+    def filter_all_notifications_already_in_db_from_current_list(self, database, table, current_list):
+        db = self.client[database]
+        collection = db[table]
+        notification_list = collection.find_one({"notification_list": {"$exists": True}})
+        if notification_list is None:
+            return current_list
+        else:
+            notification_list = notification_list["notification_list"]
+            return [notification for notification in current_list if notification not in notification_list]
             
 
 _db = Database("Atlanta", "Backstage Notifications")
