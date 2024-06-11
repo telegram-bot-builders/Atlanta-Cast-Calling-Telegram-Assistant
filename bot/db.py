@@ -9,6 +9,7 @@ class Database:
     def __init__(self, database, table):
         self.database = database
         self.table = table
+        self.user_table = "Users"
         self.client = self._connect_to_server()
         self.collection = self._connect_to_database()
 
@@ -19,7 +20,7 @@ class Database:
         return MongoClient(uri, server_api=ServerApi('1'))
     
     def _connect_to_database(self):
-        db = self.client[self.database]
+        db = self.client[self.user_table]
         return db[self.table]
 
     def submit_user(self, user):
@@ -69,6 +70,22 @@ class Database:
     
     def get_all_users(self):
         return self.collection.find({})
+    
+    def update_casting_call_notification_list(self, database, table, notification_list):
+        # make sure to check it exists first and if not, create it, then update
+        db = self.client[database]
+        collection = db[table]
+        existing_notification_list = collection.find_one({"notification_list": {"$exists": True}})
+        try:
+            if existing_notification_list is None:
+                collection.insert_one({"notification_list": notification_list})
+            else:
+                collection.update_one({"notification_list": {"$exists": True}}, {"$set": {"notification_list": notification_list}})
+            return True
+        except Exception as e:
+            print(f"Error updating casting call notification list: {e}")
+            return False
+            
 
 _db = Database("Atlanta", "Backstage Notifications")
 
