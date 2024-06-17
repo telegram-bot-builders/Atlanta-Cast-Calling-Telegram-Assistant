@@ -103,11 +103,9 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def main():
     await run_polling_and_send_messages()
-    # run every 60 minutes
-    while True:
-        pprint.pprint("Sleeping for 1 hour...")
-        await asyncio.sleep(3600)
-        await run_polling_and_send_messages()
+    import asyncio
+    pprint.pprint("Sleeping for 1 hour...")
+    await asyncio.sleep(3600)
 
 
 
@@ -115,4 +113,6 @@ async def main():
 if __name__ == '__main__':
     # run main async function
     import asyncio
-    asyncio.run(main())
+    # run every 60 minutes
+    while True:
+        asyncio.run(main())
