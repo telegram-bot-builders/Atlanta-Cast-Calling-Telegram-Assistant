@@ -1,0 +1,9 @@
+version: '3'
+services:
+  atl-casting-call-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/CASTING_CALL_BOT
+    restart: unless-stopped
