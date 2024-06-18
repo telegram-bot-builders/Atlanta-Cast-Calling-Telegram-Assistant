@@ -35,7 +35,7 @@ def poll_backstage_for_casting_calls():
     # create a list of all the Detail Link
     detailLinks = [castingCall["Detail Link"] for castingCall in castingCalls]
     # filter the list of casting calls to only include the ones that are not already in the database
-    filtered_list_of_links = _db.filter_all_notifications_already_in_db_from_current_list("Atlanata", "Backstage Notifications", detailLinks)
+    filtered_list_of_links = _db.filter_all_notifications_already_in_db_from_current_list("Atlanta", "Backstage Notifications", detailLinks)
     # filter the castingCalls list to only include the ones that are in the filtered_list_of_links
     filtered_casting_calls = [castingCall for castingCall in castingCalls if castingCall["Detail Link"] in filtered_list_of_links]
     # update the database with the new casting calls

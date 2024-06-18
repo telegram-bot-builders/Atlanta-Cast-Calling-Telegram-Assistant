@@ -75,12 +75,13 @@ class Database:
         # make sure to check it exists first and if not, create it, then update
         db = self.client[database]
         collection = db[table]
-        existing_notification_list = collection.find_one({"notification_list": {"$exists": True}})
+        print("Updating casting call notification list")
         try:
+            existing_notification_list = collection.find_one({"notification_list": {"$exists": True}})
             if existing_notification_list is None:
                 collection.insert_one({"notification_list": notification_list})
             else:
-                collection.update_one({"notification_list": {"$exists": True}}, {"$set": {"notification_list": notification_list}})
+                collection.update_one({"notification_list": {"$exists": True}}, {"$addToSet": {"notification_list": {"$each": notification_list}}})
             return True
         except Exception as e:
             print(f"Error updating casting call notification list: {e}")
@@ -95,6 +96,7 @@ class Database:
     def filter_all_notifications_already_in_db_from_current_list(self, database, table, current_list):
         db = self.client[database]
         collection = db[table]
+
         notification_list = collection.find_one({"notification_list": {"$exists": True}})
         if notification_list is None:
             return current_list
